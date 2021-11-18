@@ -9,6 +9,7 @@
 #include "NN_operations/convolution_operations.h"
 #include "NN_operations/matrix_operations.h"
 #include "NN_operations/pooling_operations.h"
+#include "NN_operations/fully_connected_operations.h"
 #include "Matrix_IO.h"
 
 
@@ -36,6 +37,7 @@ void testbench_conv2D_depthwise(unsigned long *Cycles_NN_operations);
 void testbench_conv2D_depthwiseSeparable(unsigned long *Cycles_NN_operations);
 void testbench_conv2D_depthwiseSeparable_multiOutputChannel(unsigned long *Cycles_NN_operations);
 
+void testbench_fullyConnected(unsigned long *Cycles_NN_operations);
 
 
 #endif /* NN_ALGORITHMS_TESTBENCH_H_ */

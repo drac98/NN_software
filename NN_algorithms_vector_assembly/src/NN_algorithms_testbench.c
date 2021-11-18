@@ -3,7 +3,7 @@
 //matrix width goes across ->, height goes down
 int main(void){
 	unsigned long startCycles, endCycles, cyclesToRun, Cycles_NN_operations=0;
-	unsigned long Cycles_vector=0, Cycles_matrix_Pooling=0, Cycles_conv2d=0;	
+	unsigned long Cycles_vector=0, Cycles_matrix_Pooling=0, Cycles_conv2d=0, Cycles_fully_connected=0;	
 			
 	startCycles=getCycles();
 	
@@ -27,6 +27,8 @@ int main(void){
 	testbench_conv2D_depthwiseSeparable(&Cycles_conv2d);
 	testbench_conv2D_depthwiseSeparable_multiOutputChannel(&Cycles_conv2d);
 	
+	testbench_fully_connected(&Cycles_fully_connected);
+
 	Cycles_NN_operations=Cycles_vector+Cycles_matrix_Pooling+Cycles_conv2d;
 	endCycles=getCycles();
 	cyclesToRun=endCycles-startCycles;
@@ -37,6 +39,8 @@ int main(void){
 	printf(" Number of cycles to run just matrix/pooling_operations: %lu\n",Cycles_matrix_Pooling);
 	printf("\n");
 	printf(" Number of cycles to run just conv2D_operations: %lu\n",Cycles_conv2d);
+	printf("\n");
+	printf(" Number of cycles to run just fully_connected_operations: %lu\n",Cycles_fully_connected);
 	printf("\n");
 	printf(" Number of cycles to run all NN_operations: %lu\n",Cycles_NN_operations);
 	printf("\n");
@@ -506,6 +510,33 @@ void testbench_conv2D_depthwiseSeparable_multiOutputChannel(unsigned long *Cycle
 		
 	printf("\n\nOutput:\n");
 	printMatrix3D(outputDataHeight,outputDataWidth,batch,output);
+	printf("\n");
+	*Cycles_NN_operations +=(endCycles-startCycles);
+
+}
+
+void testbench_fully_connected(unsigned long *Cycles_NN_operations){
+	unsigned long startCycles, endCycles;
+	const uint32_t N = 30, out = 40;
+	int8_t data[N];
+	int8_t weights[out][N];
+	int8_t output[out];
+
+	printf("\ntestbench_fully_Connected  \n");
+	randFillVector(N, data);
+	randFillMatrix2D(out,N, weights);
+
+	printf("\nData:\n");
+	// printVector(N, data);
+	printf("\nWeights:\n");
+	// printMatrix2D(out, N, weights);
+
+	startCycles=getCycles();
+	fully_connected(N, out, data, weights, output);
+	endCycles=getCycles();
+
+	printf("\n\nOutput:   \n");
+	// printVector(out, output);
 	printf("\n");
 	*Cycles_NN_operations +=(endCycles-startCycles);
 
